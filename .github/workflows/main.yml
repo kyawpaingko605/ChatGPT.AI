@@ -1,0 +1,50 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # ကိုယ်တိုင်နှိပ်ပြီး APK ထုတ်လို့ရမယ့် ခလုတ်
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # အကယ်၍ ပရောဂျက်က Flutter သုံးထားရင် အောက်က # တွေကို ဖြုတ်ပြီး သုံးနိုင်ပါတယ်
+      # - name: Setup Flutter
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: 'stable'
+      # - name: Install Dependencies
+      #   run: flutter pub get
+      # - name: Build APK
+      #   run: flutter build apk --release
+
+      # အကယ်၍ ပရောဂျက်က မူရင်း Android (Gradle) ဆိုရင် အောက်က ကုဒ်တွေကို သုံးရပါမယ်
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        continue-on-error: true
+
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease
+        continue-on-error: true
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: app/build/outputs/apk/release/*.apk
