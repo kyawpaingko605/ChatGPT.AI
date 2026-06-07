@@ -1,50 +1,31 @@
-name: Build Android APK
+name: Build Delphi Android APK
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # ကိုယ်တိုင်နှိပ်ပြီး APK ထုတ်လို့ရမယ့် ခလုတ်
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest # Delphi Build အတွက် Windows စက် သုံးရပါမယ်
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive' # Submodules တွေပါဝင်အောင် ဆွဲယူခိုင်းခြင်း
 
-      - name: Set up JDK 17
+      - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: '11'
+          distribution: 'zulu'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      # အကယ်၍ ပရောဂျက်က Flutter သုံးထားရင် အောက်က # တွေကို ဖြုတ်ပြီး သုံးနိုင်ပါတယ်
-      # - name: Setup Flutter
-      #   uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: 'stable'
-      # - name: Install Dependencies
-      #   run: flutter pub get
-      # - name: Build APK
-      #   run: flutter build apk --release
-
-      # အကယ်၍ ပရောဂျက်က မူရင်း Android (Gradle) ဆိုရင် အောက်က ကုဒ်တွေကို သုံးရပါမယ်
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        continue-on-error: true
-
-      - name: Build with Gradle
-        run: ./gradlew assembleRelease
-        continue-on-error: true
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apk
-          path: app/build/outputs/apk/release/*.apk
+      # သတိပြုရန် - GitHub စက်ပေါ်မှာ Delphi Compiler အသင့်မရှိလို့ 
+      # Delphi IDE command-line အလုပ်လုပ်အောင် ဒီအဆင့်မှာ ကုဒ်တွေ ထပ်မံ စီစဉ်ပေးရပါမယ်
+      - name: Build Android Project
+        run: |
+          echo "Compiling Delphi Project for Android..."
+          # ဒီနေရာမှာ သင့်ရဲ့ Delphi Environment လမ်းကြောင်းအတိုင်း msbuild ခေါ်ပေးရမှာ ဖြစ်ပါတယ်
