@@ -1,4 +1,4 @@
-﻿unit ChatGPT.Main;
+unit ChatGPT.Main;
 
 interface
 
@@ -209,7 +209,7 @@ end;
 
 procedure TFormMain.ShowClearConfirm;
 begin
-  ButtonClear.Text := 'Confirm clear';
+  ButtonClear.Text := 'ဖျက်ရန် အတည်ပြုပါ'; // ပြင်ဆင်ပြီး (Confirm clear)
   ButtonClearConfirm.Visible := True;
   ButtonClearCancel.Visible := True;
 end;
@@ -221,7 +221,7 @@ end;
 
 procedure TFormMain.HideClearConfirm;
 begin
-  ButtonClear.Text := 'Clear conversations';
+  ButtonClear.Text := 'စကားပြောခန်းများ အကုန်ဖျက်ရန်'; // ပြင်ဆင်ပြီး (Clear conversations)
   ButtonClearConfirm.Visible := False;
   ButtonClearCancel.Visible := False;
 end;
@@ -313,7 +313,7 @@ begin
   begin
     ItemList.JSON := nil;
     ItemList.ChatId := TGUID.NewGuid.ToString;
-    ItemList.Text := 'New chat ' + NextChatId.ToString;
+    ItemList.Text := 'စကားပြောခန်းအသစ် ' + NextChatId.ToString; // ပြင်ဆင်ပြီး (New chat)
   end
   else
   begin
@@ -427,7 +427,7 @@ begin
   if TFMXObjectHelper.FindNearestParentOfClass<TListBoxItemChat>(Button, ListItem) then
   begin
     ChatId := ListItem.ChatId;
-    TDialogService.InputQuery('New Chat name', ['Name'], [ListItem.Text],
+    TDialogService.InputQuery('စကားပြောခန်းအမည်အသစ်', ['အမည်'], [ListItem.Text], // ပြင်ဆင်ပြီး (New Chat name, Name)
       procedure(const AResult: TModalResult; const AValues: array of string)
       begin
         if AResult = mrOk then
@@ -441,11 +441,12 @@ var
   Button: TButton absolute Sender;
   ListItem: TListBoxItemChat;
   ChatId: string;
+end;
 begin
   if TFMXObjectHelper.FindNearestParentOfClass<TListBoxItemChat>(Button, ListItem) then
   begin
     ChatId := ListItem.ChatId;
-    TDialogService.MessageDialog('Delete "' + ListItem.Text + '"?',
+    TDialogService.MessageDialog('"' + ListItem.Text + '" ကို ဖြတ်မှာ သေချာပါသလား?', // ပြင်ဆင်ပြီး (Delete confirmation)
       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo],
       TMsgDlgBtn.mbNo, 0,
       procedure(const AResult: TModalResult)
@@ -910,7 +911,7 @@ begin
       Frame.EditProxyPort.Text := OpenAI.API.ProxySettings.Port.ToString;
       Frame.EditProxyUsername.Text := OpenAI.API.ProxySettings.UserName;
       Frame.EditProxyPassword.Text := OpenAI.API.ProxySettings.Password;
-      Frame.LabelVersion.Text := 'Version: ' + VersionName;
+      Frame.LabelVersion.Text := 'ဗားရှင်း: ' + VersionName; // ပြင်ဆင်ပြီး (Version)
       Frame.EditBaseUrl.Text := OpenAI.BaseUrl;
       Frame.SwitchUseFunctions.IsChecked := UseFunctions;
       Frame.SwitchAutoExecFuncs.IsChecked := AutoExecFuncs;
@@ -991,16 +992,12 @@ procedure TFormMain.FormVirtualKeyboardHidden(Sender: TObject; KeyboardVisible: 
 begin
   TAnimator.AnimateFloat(Self, 'Padding.Bottom', 0);
   TAnimator.AnimateFloat(LayoutOverlay, 'Margins.Bottom', 0);
-  // Padding.Bottom := 0;
-  // LayoutOverlay.Margins.Bottom := 0;
 end;
 
 procedure TFormMain.FormVirtualKeyboardShown(Sender: TObject; KeyboardVisible: Boolean; const Bounds: TRect);
 begin
   TAnimator.AnimateFloat(Self, 'Padding.Bottom', Bounds.Height);
   TAnimator.AnimateFloat(LayoutOverlay, 'Margins.Bottom', Bounds.Height);
-  // LayoutOverlay.Margins.Bottom := Bounds.Height;
-  // Padding.Bottom := Bounds.Height;
 end;
 
 procedure TFormMain.UpdateMode;
@@ -1149,4 +1146,3 @@ initialization
   {$ENDIF}
 
 end.
-
